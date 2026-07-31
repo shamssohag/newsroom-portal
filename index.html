@@ -32,7 +32,7 @@
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <div>
                 <h2 id="welcomeText" class="text-2xl font-bold text-gray-800">Welcome</h2>
-                <p id="userRoleText" class="text-sm text-gray-500 font-semibold"></p>
+                <p id="userRoleText" class="text-sm text-indigo-600 font-semibold"></p>
             </div>
             <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm font-medium">Logout</button>
         </div>
@@ -42,9 +42,9 @@
     </div>
 
     <script>
+        // আপনার নতুন ডিপ্লয়কৃত Web App URL এখানে সেট করা আছে
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxPUjX1LdmyPUuyxDcSA0WOOcUq1FXjG55i7RrvNtqOsJKg2IQU2qxVrZzVbsBq1gHOXQ/exec";
 
-        // Login Handler
         document.getElementById("loginForm").addEventListener("submit", function(e) {
             e.preventDefault();
             var email = document.getElementById("loginEmail").value;
@@ -63,7 +63,6 @@
             .then(res => res.json())
             .then(data => {
                 if(data.status === "success") {
-                    // Save session in localStorage
                     localStorage.setItem("user", JSON.stringify(data));
                     loadDashboard(data);
                 } else {
@@ -79,7 +78,6 @@
             });
         });
 
-        // Load Dashboard based on User Role
         function loadDashboard(user) {
             document.getElementById("loginSection").classList.add("hidden");
             document.getElementById("dashboardSection").classList.remove("hidden");
@@ -94,11 +92,11 @@
                 contentDiv.innerHTML = `
                     <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-200">
                         <h3 class="text-xl font-bold text-indigo-800 mb-4">Admin Control Panel</h3>
-                        <p class="text-gray-600 mb-4">Approve users, assign roles, and manage system categories.</p>
+                        <p class="text-gray-600 mb-4">Manage system users, reporters, editors, and access control.</p>
                         <div class="bg-white p-4 rounded shadow">
-                            <h4 class="font-bold mb-2">Add New User / Reporter</h4>
+                            <h4 class="font-bold mb-2 text-gray-700">Add New User / Staff</h4>
                             <input type="text" id="newName" placeholder="Full Name" class="block w-full mb-2 px-3 py-2 border rounded">
-                            <input type="email" id="newEmail" placeholder="Email" class="block w-full mb-2 px-3 py-2 border rounded">
+                            <input type="email" id="newEmail" placeholder="Email Address" class="block w-full mb-2 px-3 py-2 border rounded">
                             <input type="password" id="newPassword" placeholder="Password" class="block w-full mb-2 px-3 py-2 border rounded">
                             <select id="newRole" class="block w-full mb-2 px-3 py-2 border rounded">
                                 <option value="Reporter">Reporter</option>
@@ -106,7 +104,7 @@
                                 <option value="Desk In-charge">Desk In-charge</option>
                                 <option value="Admin">Admin</option>
                             </select>
-                            <button onclick="addNewUser()" class="bg-green-600 text-white px-4 py-2 rounded font-semibold">Create User</button>
+                            <button onclick="addNewUser()" class="bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700">Create User</button>
                         </div>
                     </div>
                 `;
@@ -114,15 +112,14 @@
                 contentDiv.innerHTML = `
                     <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
                         <h3 class="text-xl font-bold text-blue-800 mb-2">Review Dashboard (${user.role})</h3>
-                        <p class="text-gray-600">Review scripts submitted by reporters, check status, and approve/request re-edits.</p>
+                        <p class="text-gray-600">Review scripts submitted by reporters and update editorial status.</p>
                     </div>
                 `;
             } else {
-                // Reporter View (Script Submission Form & History)
                 contentDiv.innerHTML = `
                     <div class="bg-gray-50 p-6 rounded-lg border">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Submit New Script</h3>
-                        <p class="text-gray-500">[Script Submission Form goes here]</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Reporter Script Submission Form</h3>
+                        <p class="text-gray-500">[Your news submission form goes here]</p>
                     </div>
                 `;
             }
@@ -134,6 +131,11 @@
             var password = document.getElementById("newPassword").value;
             var role = document.getElementById("newRole").value;
 
+            if(!name || !email || !password) {
+                alert("Please fill all fields!");
+                return;
+            }
+
             fetch(WEB_APP_URL, {
                 method: "POST",
                 body: JSON.stringify({ action: "addUser", newName: name, newEmail: email, newPassword: password, newRole: role })
@@ -144,7 +146,8 @@
                 document.getElementById("newName").value = "";
                 document.getElementById("newEmail").value = "";
                 document.getElementById("newPassword").value = "";
-            });
+            })
+            .catch(err => alert("Error: " + err));
         }
 
         function logout() {
@@ -152,7 +155,6 @@
             location.reload();
         }
 
-        // Auto-login if session exists
         window.onload = function() {
             var savedUser = localStorage.getItem("user");
             if(savedUser) {
