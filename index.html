@@ -1,184 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newsroom Script Writer Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsroom Script Writer Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <div class="max-w-3xl mx-auto my-10 bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Newsroom Script Submission Portal</h2>
-        
-        <form id="newsForm" class="space-y-4">
-            <!-- Reporter Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Reporter Name:</label>
-                <input type="text" id="reporterName" placeholder="Enter full name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+    <div class="max-w-3xl mx-auto my-10 bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Newsroom Script Submission Portal</h2>
+        
+        <form id="newsForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Reporter Name:</label>
+                <input type="text" id="reporterName" placeholder="Enter full name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Reporter Office ID -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Reporter Office ID:</label>
-                <input type="text" id="reporterId" placeholder="e.g. REP-1025" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Reporter Office ID:</label>
+                <input type="text" id="reporterId" placeholder="e.g. REP-1025" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Reporter Email -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Reporter Email:</label>
-                <input type="email" id="reporterEmail" placeholder="example@news.com" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Reporter Email:</label>
+                <input type="email" id="reporterEmail" placeholder="example@news.com" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Category -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Category:</label>
-                <select id="category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">-- Select Category --</option>
-                    <option value="Central">Central</option>
-                    <option value="National">National</option>
-                    <option value="International">International</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Crime">Crime</option>
-                    <option value="Tech">Tech</option>
-                    <option value="Business">Business</option>
-                    <option value="Program">Program</option>
-                    <option value="Promotion">Promotion</option>
-                    <option value="Special News">Special News</option>
-                </select>
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Category:</label>
+                <select id="category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">-- Select Category --</option>
+                    <option value="Central">Central</option>
+                    <option value="National">National</option>
+                    <option value="International">International</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Crime">Crime</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Business">Business</option>
+                    <option value="Program">Program</option>
+                    <option value="Promotion">Promotion</option>
+                    <option value="Special News">Special News</option>
+                </select>
+            </div>
 
-            <!-- Slug -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Slug:</label>
-                <input type="text" id="slug" placeholder="e.g. Metro_Rail_Update" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Slug:</label>
+                <input type="text" id="slug" placeholder="e.g. Metro_Rail_Update" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Title -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Title:</label>
-                <input type="text" id="title" placeholder="Main news headline" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Title:</label>
+                <input type="text" id="title" placeholder="Main news headline" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Thumb Text -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Thumb Text:</label>
-                <input type="text" id="thumbText" placeholder="Short lower-third text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Thumb Text:</label>
+                <input type="text" id="thumbText" placeholder="Short lower-third text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Story with Professional Text Editor UI -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Story Content:</label>
-                <div class="border border-gray-300 rounded-md shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
-                    <div class="bg-gray-50 border-b border-gray-300 px-3 py-2 flex flex-wrap gap-2 items-center text-gray-600">
-                        <button type="button" onclick="formatText('bold')" class="p-1.5 rounded hover:bg-gray-200 font-bold text-sm px-2.5" title="Bold">B</button>
-                        <button type="button" onclick="formatText('italic')" class="p-1.5 rounded hover:bg-gray-200 italic text-sm px-2.5" title="Italic">I</button>
-                        <button type="button" onclick="formatText('underline')" class="p-1.5 rounded hover:bg-gray-200 underline text-sm px-2.5" title="Underline">U</button>
-                        <span class="text-gray-300">|</span>
-                        <button type="button" onclick="insertTag('[BREAKING]')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Breaking</button>
-                        <button type="button" onclick="insertTag('[LIVE]')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Live</button>
-                        <button type="button" onclick="insertTag('\n-- - - - - - - - - - - - - - - - - - -\n')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Break Line</button>
-                    </div>
-                    <textarea id="story" rows="8" placeholder="Write your detailed news story here..." required class="block w-full px-3 py-2 focus:outline-none resize-y"></textarea>
-                </div>
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Story Content:</label>
+                <div class="border border-gray-300 rounded-md shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                    <div class="bg-gray-50 border-b border-gray-300 px-3 py-2 flex flex-wrap gap-2 items-center text-gray-600">
+                        <button type="button" onclick="formatText('bold')" class="p-1.5 rounded hover:bg-gray-200 font-bold text-sm px-2.5" title="Bold">B</button>
+                        <button type="button" onclick="formatText('italic')" class="p-1.5 rounded hover:bg-gray-200 italic text-sm px-2.5" title="Italic">I</button>
+                        <button type="button" onclick="formatText('underline')" class="p-1.5 rounded hover:bg-gray-200 underline text-sm px-2.5" title="Underline">U</button>
+                        <span class="text-gray-300">|</span>
+                        <button type="button" onclick="insertTag('[BREAKING]')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Breaking</button>
+                        <button type="button" onclick="insertTag('[LIVE]')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Live</button>
+                        <button type="button" onclick="insertTag('\n-- - - - - - - - - - - - - - - - - - -\n')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-medium">Break Line</button>
+                    </div>
+                    <textarea id="story" rows="8" placeholder="Write your detailed news story here..." required class="block w-full px-3 py-2 focus:outline-none resize-y"></textarea>
+                </div>
+            </div>
 
-            <!-- Pay-off -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Pay-off:</label>
-                <input type="text" id="payoff" placeholder="e.g. Reporter, from Dhaka." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Pay-off:</label>
+                <input type="text" id="payoff" placeholder="e.g. Reporter, from Dhaka." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- Submit Button -->
-            <div>
-                <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 font-semibold">
-                    Submit Script
-                </button>
-            </div>
-        </form>
+            <div>
+                <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 font-semibold">
+                    Submit Script
+                </button>
+            </div>
+        </form>
 
-        <div id="responseMessage" class="mt-4 text-center font-medium"></div>
-    </div>
+        <div id="responseMessage" class="mt-4 text-center font-medium"></div>
+    </div>
 
-    <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx9Z9nS_vmkX3p2LLMtIH9-Q6KCWjktjoe4w-GCb4apt9VuTHDWXJh-KFKIyparQ0aPOQ/exec";
-        function formatText(style) {
-            const textarea = document.getElementById('story');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selectedText = textarea.value.substring(start, end);
-            
-            let replacement = '';
-            if (style === 'bold') replacement = `**${selectedText}**`;
-            if (style === 'italic') replacement = `*${selectedText}*`;
-            if (style === 'underline') replacement = `__${selectedText}__`;
-            
-            textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-            textarea.focus();
-            textarea.setSelectionRange(start + replacement.length, start + replacement.length);
-        }
+    <script>
+        function formatText(style) {
+            const textarea = document.getElementById('story');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            
+            let replacement = '';
+            if (style === 'bold') replacement = `**${selectedText}**`;
+            if (style === 'italic') replacement = `*${selectedText}*`;
+            if (style === 'underline') replacement = `__${selectedText}__`;
+            
+            textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + replacement.length, start + replacement.length);
+        }
 
-        function insertTag(tag) {
-            const textarea = document.getElementById('story');
-            const start = textarea.selectionStart;
-            textarea.value = textarea.value.substring(0, start) + tag + textarea.value.substring(start);
-            textarea.focus();
-        }
+        function insertTag(tag) {
+            const textarea = document.getElementById('story');
+            const start = textarea.selectionStart;
+            textarea.value = textarea.value.substring(0, start) + tag + textarea.value.substring(start);
+            textarea.focus();
+        }
 
-       document.getElementById("newsForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    var submitBtn = document.getElementById("submitBtn");
-    var responseMsg = document.getElementById("responseMsg");
-    
-    // ১. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Submitting, Please Wait...";
-    responseMsg.innerHTML = "";
-    
-    var formData = {
-        reporterName: document.getElementById("reporterName").value,
-        reporterId: document.getElementById("reporterId").value,
-        reporterEmail: document.getElementById("reporterEmail").value,
-        category: document.getElementById("category").value,
-        slug: document.getElementById("slug").value,
-        title: document.getElementById("title").value,
-        thumbText: document.getElementById("thumbText").value,
-        story: document.getElementById("story").value,
-        payoff: document.getElementById("payoff").value
-    };
-    
-    var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx9Z9nS_vmkX3p2LLMtIH9-Q6KCWjktjoe4w-GCb4apt9VuTHDWXJh-KFKIyparQ0aPOQ/exec"; // আপনার ডিপ্লয় করা ইউআরএলটি এখানে দেবেন
-    
-    fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === "success") {
-            // ২. সাকসেস মেসেজ ও গুগল ডক লিংক শো করা
-            responseMsg.innerHTML = `
-                <div style="padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-top: 15px;">
-                    <strong>Success!</strong> Script submitted successfully and Google Doc created!<br><br>
-                    <a href="${data.docUrl}" target="_blank" style="background: #28a745; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block;">Open Google Doc</a>
-                </div>
-            `;
-            document.getElementById("newsForm").reset(); // ফর্ম ক্লিয়ার করা
-        } else {
-            responseMsg.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`;
-        }
-    })
-    .catch(error => {
-        responseMsg.innerHTML = `<p style="color: red;">Connection Error: ${error}</p>`;
-    })
-    .finally(() => {
-        // ৩. বাটন আগের অবস্থায় ফিরিয়ে আনা
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Submit Script";
-    });
-});
-    </script>
+        document.getElementById("newsForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            var submitBtn = document.getElementById("submitBtn");
+            var responseMsg = document.getElementById("responseMessage"); // এখানে ঠিক করা হলো
+            
+            // ১. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting, Please Wait...";
+            responseMsg.innerHTML = "";
+            
+            var formData = {
+                reporterName: document.getElementById("reporterName").value,
+                reporterId: document.getElementById("reporterId").value,
+                reporterEmail: document.getElementById("reporterEmail").value,
+                category: document.getElementById("category").value,
+                slug: document.getElementById("slug").value,
+                title: document.getElementById("title").value,
+                thumbText: document.getElementById("thumbText").value,
+                story: document.getElementById("story").value,
+                payoff: document.getElementById("payoff").value
+            };
+            
+            // আপনার সঠিক ডিপ্লয় করা ওয়েব অ্যাপ ইউআরএল এখানে বসানো হলো
+            var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwD6ex9IcvASPKh0HNFD8qMZQ_DgN8VIV34D1-o6jdNgr-DHdPy5W_0LaQAO_AIdOKtEA/exec";
+            
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === "success") {
+                    // ২. সাকসেস মেসেজ ও গুগল ডক লিংক শো করা
+                    responseMsg.innerHTML = `
+                        <div style="padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-top: 15px;">
+                            <strong>Success!</strong> Script submitted successfully and Google Doc created!<br><br>
+                            <a href="${data.docUrl}" target="_blank" style="background: #28a745; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block;">Open Google Doc</a>
+                        </div>
+                    `;
+                    document.getElementById("newsForm").reset(); // ফর্ম ক্লিয়ার করা
+                } else {
+                    responseMsg.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                responseMsg.innerHTML = `<p style="color: red;">Connection Error: ${error}</p>`;
+            })
+            .finally(() => {
+                // ৩. বাটন আগের অবস্থায় ফিরিয়ে আনা
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Script";
+            });
+        });
+    </script>
 </body>
 </html>
