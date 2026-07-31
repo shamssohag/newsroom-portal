@@ -101,7 +101,7 @@
         <div id="responseMessage" class="mt-4 text-center font-medium"></div>
     </div>
 
-   <script>
+    <script>
         function formatText(style) {
             const textarea = document.getElementById('story');
             const start = textarea.selectionStart;
@@ -131,17 +131,15 @@
             var submitBtn = document.getElementById("submitBtn");
             var responseMsg = document.getElementById("responseMessage");
             
-            responseMsg.innerHTML = "";
-
-                    
-            // ২. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
+            // ১. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
             submitBtn.disabled = true;
             submitBtn.innerText = "Submitting, Please Wait...";
+            responseMsg.innerHTML = "";
             
             var formData = {
                 reporterName: document.getElementById("reporterName").value,
                 reporterId: document.getElementById("reporterId").value,
-                reporterEmail: email,
+                reporterEmail: document.getElementById("reporterEmail").value,
                 category: document.getElementById("category").value,
                 slug: document.getElementById("slug").value,
                 title: document.getElementById("title").value,
@@ -159,6 +157,7 @@
             .then(response => response.json())
             .then(data => {
                 if(data.status === "success") {
+                    // ২. সাকসেস মেসেজ ও গুগল ডক লিংক শো করা
                     responseMsg.innerHTML = `
                         <div style="padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-top: 15px;">
                             <strong>Success!</strong> Script submitted successfully and Google Doc created!<br><br>
@@ -174,8 +173,11 @@
                 responseMsg.innerHTML = `<p style="color: red;">Connection Error: ${error}</p>`;
             })
             .finally(() => {
+                // ৩. বাটন আগের অবস্থায় ফিরিয়ে আনা
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Submit Script";
             });
         });
     </script>
+</body>
+</html>
