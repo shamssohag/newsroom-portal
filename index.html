@@ -101,7 +101,7 @@
         <div id="responseMessage" class="mt-4 text-center font-medium"></div>
     </div>
 
-    <script>
+   <script>
         function formatText(style) {
             const textarea = document.getElementById('story');
             const start = textarea.selectionStart;
@@ -131,14 +131,29 @@
             var submitBtn = document.getElementById("submitBtn");
             var responseMsg = document.getElementById("responseMessage");
             
+            responseMsg.innerHTML = "";
+
+            // ১. ইমেল ডোমেইন ভ্যালিডেশন চেক
+            var email = document.getElementById("reporterEmail").value.trim();
+            var allowedDomain = "@yournewsportal.com"; // আপনার অফিশিয়াল ডোমেইন এখানে বসাবেন
+
+            if (!email.endsWith(allowedDomain)) {
+                responseMsg.innerHTML = `
+                    <div style="padding: 12px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;">
+                        <strong>Security Error:</strong> Only official portal emails (<strong>${allowedDomain}</strong>) are authorized to submit scripts!
+                    </div>
+                `;
+                return; // ডোমেইন না মিললে সাবমিট প্রসেস এখানেই আটকে যাবে
+            }
+            
+            // ২. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
             submitBtn.disabled = true;
             submitBtn.innerText = "Submitting, Please Wait...";
-            responseMsg.innerHTML = "";
             
             var formData = {
                 reporterName: document.getElementById("reporterName").value,
                 reporterId: document.getElementById("reporterId").value,
-                reporterEmail: document.getElementById("reporterEmail").value,
+                reporterEmail: email,
                 category: document.getElementById("category").value,
                 slug: document.getElementById("slug").value,
                 title: document.getElementById("title").value,
@@ -176,5 +191,3 @@
             });
         });
     </script>
-</body>
-</html>
