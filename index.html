@@ -127,50 +127,59 @@
             textarea.focus();
         }
 
-        document.getElementById('newsForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const btn = document.getElementById('submitBtn');
-            const msg = document.getElementById('responseMessage');
-            
-            btn.disabled = true;
-            btn.innerText = "Submitting...";
-            msg.innerText = "";
-
-            const formData = {
-                reporterName: document.getElementById('reporterName').value,
-                reporterId: document.getElementById('reporterId').value,
-                reporterEmail: document.getElementById('reporterEmail').value,
-                category: document.getElementById('category').value,
-                slug: document.getElementById('slug').value,
-                title: document.getElementById('title').value,
-                thumbText: document.getElementById('thumbText').value,
-                story: document.getElementById('story').value,
-                payoff: document.getElementById('payoff').value
-            };
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                msg.style.color = "green";
-                msg.innerText = "Script submitted successfully and Google Doc created!";
-                document.getElementById('newsForm').reset();
-            })
-            .catch(error => {
-                msg.style.color = "red";
-                msg.innerText = "An error occurred: " + error;
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerText = "Submit Script";
-            });
-        });
+       document.getElementById("newsForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    var submitBtn = document.getElementById("submitBtn");
+    var responseMsg = document.getElementById("responseMsg");
+    
+    // ১. লোডিং স্টেট শুরু ও বাটন ডিজেবল করা
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting, Please Wait...";
+    responseMsg.innerHTML = "";
+    
+    var formData = {
+        reporterName: document.getElementById("reporterName").value,
+        reporterId: document.getElementById("reporterId").value,
+        reporterEmail: document.getElementById("reporterEmail").value,
+        category: document.getElementById("category").value,
+        slug: document.getElementById("slug").value,
+        title: document.getElementById("title").value,
+        thumbText: document.getElementById("thumbText").value,
+        story: document.getElementById("story").value,
+        payoff: document.getElementById("payoff").value
+    };
+    
+    var WEB_APP_URL = "আপনার_নতুন_ওয়েব_অ্যাপ_ইউআরএল_এখানে_বসাবেন"; // আপনার ডিপ্লয় করা ইউআরএলটি এখানে দেবেন
+    
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === "success") {
+            // ২. সাকসেস মেসেজ ও গুগল ডক লিংক শো করা
+            responseMsg.innerHTML = `
+                <div style="padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-top: 15px;">
+                    <strong>Success!</strong> Script submitted successfully and Google Doc created!<br><br>
+                    <a href="${data.docUrl}" target="_blank" style="background: #28a745; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block;">Open Google Doc</a>
+                </div>
+            `;
+            document.getElementById("newsForm").reset(); // ফর্ম ক্লিয়ার করা
+        } else {
+            responseMsg.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`;
+        }
+    })
+    .catch(error => {
+        responseMsg.innerHTML = `<p style="color: red;">Connection Error: ${error}</p>`;
+    })
+    .finally(() => {
+        // ৩. বাটন আগের অবস্থায় ফিরিয়ে আনা
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Script";
+    });
+});
     </script>
 </body>
 </html>
