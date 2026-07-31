@@ -1,59 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newsroom Management Portal</title>
+    <meta name="viewport" content5="width=device-width, initial-scale=1.0">
+    <title>Newsroom Script Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans min-h-screen">
 
-    <div id="loginSection" class="max-w-md mx-auto my-20 bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Newsroom Portal Login</h2>
-        <form id="loginForm" class="space-y-4">
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7OTvMimnMoOwKcbtBVfiLr2M3xWmljuimzXgQ0QuyvKn6Ndj7RllYKxfNPEYNM4tzlw/exec";
+    </script>
+
+    <div id="loginSection" class="max-w-md mx-auto mt-20 bg-white p-8 rounded-lg shadow-md border">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Newsroom Login</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" id="loginEmail" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="loginEmail" required class="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-blue-300">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Password:</label>
-                <input type="password" id="loginPassword" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="loginPassword" required class="w-full mt-1 p-2 border rounded-md focus:ring focus:ring-blue-300">
             </div>
-            <div>
-                <button type="submit" id="loginBtn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 font-semibold">
-                    Login
-                </button>
-            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 font-semibold">Login</button>
+            <p id="loginError" class="text-red-500 text-sm text-center mt-2"></p>
         </form>
-        <div id="loginError" class="mt-4 text-center text-red-600 font-medium"></div>
     </div>
 
-    <div id="dashboardSection" class="hidden max-w-4xl mx-auto my-10 bg-white p-8 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-6 border-b pb-4">
+    <div id="dashboardSection" class="hidden max-w-7xl mx-auto p-4 md:p-6">
+        <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-6 border">
             <div>
-                <h2 id="welcomeText" class="text-2xl font-bold text-gray-800">Welcome</h2>
-                <p id="userRoleText" class="text-sm text-indigo-600 font-semibold"></p>
+                <h1 class="text-xl font-bold text-gray-800" id="welcomeUser">Welcome</h1>
+                <p class="text-sm text-gray-500">Role: <span id="userRoleBadge" class="font-semibold text-blue-600"></span></p>
             </div>
-            <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm font-medium">Logout</button>
+            <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm hover:bg-red-600">Logout</button>
         </div>
 
-        <div id="roleContent">
-            </div>
+        <div id="panelContainer"></div>
     </div>
 
     <script>
-        // আপনার নতুন ডিপ্লয়কৃত Web App URL এখানে সেট করা আছে
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyORP56YyvV5WV-V3HH9GXWx1bt9SXUlyCTw7fb6hxEEmMQ8MIJ45kLovbdhpSNujuP6w/exec";
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
+        let currentUser = null;
+
+        function handleLogin(e) {
             e.preventDefault();
             var email = document.getElementById("loginEmail").value;
             var password = document.getElementById("loginPassword").value;
-            var loginBtn = document.getElementById("loginBtn");
-            var errorDiv = document.getElementById("loginError");
-
-            loginBtn.disabled = true;
-            loginBtn.innerText = "Logging in...";
-            errorDiv.innerText = "";
+            var errorTag = document.getElementById("loginError");
+            
+            errorTag.innerText = "Logging in...";
 
             fetch(WEB_APP_URL, {
                 method: "POST",
@@ -62,103 +58,289 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyORP56YyvV5WV-V3HH
             .then(res => res.json())
             .then(data => {
                 if(data.status === "success") {
-                    localStorage.setItem("user", JSON.stringify(data));
-                    loadDashboard(data);
+                    currentUser = data;
+                    document.getElementById("loginSection").classList.add("hidden");
+                    document.getElementById("dashboardSection").classList.remove("hidden");
+                    
+                    document.getElementById("welcomeUser").innerText = "User: " + data.name;
+                    document.getElementById("userRoleBadge").innerText = data.role;
+                    
+                    renderDashboard(data.role);
                 } else {
-                    errorDiv.innerText = data.message;
-                    loginBtn.disabled = false;
-                    loginBtn.innerText = "Login";
+                    errorTag.innerText = data.message;
                 }
             })
             .catch(err => {
-                errorDiv.innerText = "Connection Error: " + err;
-                loginBtn.disabled = false;
-                loginBtn.innerText = "Login";
+                errorTag.innerText = "Connection error!";
+                console.error(err);
             });
-        });
-
-        function loadDashboard(user) {
-            document.getElementById("loginSection").classList.add("hidden");
-            document.getElementById("dashboardSection").classList.remove("hidden");
-            
-            document.getElementById("welcomeText").innerText = "Hello, " + user.name;
-            document.getElementById("userRoleText").innerText = "Role: " + user.role;
-
-            var contentDiv = document.getElementById("roleContent");
-            contentDiv.innerHTML = "";
-
-            if (user.role === "Admin") {
-                contentDiv.innerHTML = `
-                    <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-200">
-                        <h3 class="text-xl font-bold text-indigo-800 mb-4">Admin Control Panel</h3>
-                        <p class="text-gray-600 mb-4">Manage system users, reporters, editors, and access control.</p>
-                        <div class="bg-white p-4 rounded shadow">
-                            <h4 class="font-bold mb-2 text-gray-700">Add New User / Staff</h4>
-                            <input type="text" id="newName" placeholder="Full Name" class="block w-full mb-2 px-3 py-2 border rounded">
-                            <input type="email" id="newEmail" placeholder="Email Address" class="block w-full mb-2 px-3 py-2 border rounded">
-                            <input type="password" id="newPassword" placeholder="Password" class="block w-full mb-2 px-3 py-2 border rounded">
-                            <select id="newRole" class="block w-full mb-2 px-3 py-2 border rounded">
-                                <option value="Reporter">Reporter</option>
-                                <option value="Editor">Editor</option>
-                                <option value="Desk In-charge">Desk In-charge</option>
-                                <option value="Admin">Admin</option>
-                            </select>
-                            <button onclick="addNewUser()" class="bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700">Create User</button>
-                        </div>
-                    </div>
-                `;
-            } else if (user.role === "Editor" || user.role === "Desk In-charge") {
-                contentDiv.innerHTML = `
-                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                        <h3 class="text-xl font-bold text-blue-800 mb-2">Review Dashboard (${user.role})</h3>
-                        <p class="text-gray-600">Review scripts submitted by reporters and update editorial status.</p>
-                    </div>
-                `;
-            } else {
-                contentDiv.innerHTML = `
-                    <div class="bg-gray-50 p-6 rounded-lg border">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Reporter Script Submission Form</h3>
-                        <p class="text-gray-500">[Your news submission form goes here]</p>
-                    </div>
-                `;
-            }
-        }
-
-        function addNewUser() {
-            var name = document.getElementById("newName").value;
-            var email = document.getElementById("newEmail").value;
-            var password = document.getElementById("newPassword").value;
-            var role = document.getElementById("newRole").value;
-
-            if(!name || !email || !password) {
-                alert("Please fill all fields!");
-                return;
-            }
-
-            fetch(WEB_APP_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "addUser", newName: name, newEmail: email, newPassword: password, newRole: role })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                document.getElementById("newName").value = "";
-                document.getElementById("newEmail").value = "";
-                document.getElementById("newPassword").value = "";
-            })
-            .catch(err => alert("Error: " + err));
         }
 
         function logout() {
-            localStorage.removeItem("user");
-            location.reload();
+            currentUser = null;
+            document.getElementById("dashboardSection").classList.add("hidden");
+            document.getElementById("loginSection").classList.remove("hidden");
+            document.getElementById("loginForm").reset();
         }
 
-        window.onload = function() {
-            var savedUser = localStorage.getItem("user");
-            if(savedUser) {
-                loadDashboard(JSON.parse(savedUser));
+        function renderDashboard(role) {
+            var container = document.getElementById("panelContainer");
+            container.innerHTML = "";
+
+            if (role === "Admin") {
+                container.innerHTML += getAdminPanelHtml();
             }
+            if (role === "Editor" || role === "Desk In-charge" || role === "Admin") {
+                container.innerHTML += getEditorPanelHtml();
+                loadScripts();
+            }
+            if (role === "Reporter" || role === "Admin") {
+                container.innerHTML += getReporterPanelHtml();
+            }
+        }
+
+        // --- প্যানেল টেমপ্লেট ফাংশনসমূহ ---
+
+        function getAdminPanelHtml() {
+            return `
+                <div class="bg-white p-6 rounded-lg shadow-md border mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Admin Panel - Add New User</h3>
+                    <form onsubmit="handleAddUser(event)" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <input type="text" id="newName" placeholder="Full Name" required class="p-2 border rounded text-sm">
+                        <input type="email" id="newEmail" placeholder="Email Address" required class="p-2 border rounded text-sm">
+                        <input type="password" id="newPassword" placeholder="Password" required class="p-2 border rounded text-sm">
+                        <select id="newRole" class="p-2 border rounded text-sm">
+                            <option value="Reporter">Reporter</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Desk In-charge">Desk In-charge</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                        <button type="submit" class="bg-green-600 text-white p-2 rounded text-sm font-semibold hover:bg-green-700">Add User</button>
+                    </form>
+                    <p id="addUserMsg" class="text-sm mt-2 font-medium"></p>
+                </div>
+            `;
+        }
+
+        function getEditorPanelHtml() {
+            return `
+                <div class="bg-white p-6 rounded-lg shadow-md border mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Newsroom Desk & Editor Panel</h3>
+                        <button onclick="loadScripts()" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">Refresh List</button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 border">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Unique ID</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Title & Reporter</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Google Doc</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scriptTableBody" class="bg-white divide-y divide-gray-200">
+                                <tr><td colspan="6" class="text-center py-4 text-gray-500">Loading scripts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getReporterPanelHtml() {
+            return `
+                <div class="bg-white p-6 rounded-lg shadow-md border mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Reporter Script Submission Form</h3>
+                    <form onsubmit="handleScriptSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="newsCategory" required class="w-full mt-1 p-2 border rounded-md">
+                                    <option value="">Select Category</option>
+                                    <option value="Central">Central</option>
+                                    <option value="National">National</option>
+                                    <option value="International">International</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Crime">Crime</option>
+                                    <option value="Tech">Tech</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Program">Program</option>
+                                    <option value="Promotion">Promotion</option>
+                                    <option value="Special News">Special News</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Slug / Short Keyword</label>
+                                <input type="text" id="newsSlug" required placeholder="e.g. election-update" class="w-full mt-1 p-2 border rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" id="newsTitle" required class="w-full mt-1 p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Thumb Text</label>
+                            <input type="text" id="newsThumbText" required class="w-full mt-1 p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Story</label>
+                            <textarea id="newsStory" rows="5" required class="w-full mt-1 p-2 border rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Pay-off</label>
+                            <input type="text" id="newsPayoff" required class="w-full mt-1 p-2 border rounded-md">
+                        </div>
+                        <button type="submit" id="submitBtn" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 font-semibold">Submit Script</button>
+                        <p id="submitMsg" class="text-sm font-medium mt-2"></p>
+                    </form>
+                </div>
+            `;
+        }
+
+        // --- অ্যাকশন হ্যান্ডলার ফাংশনসমূহ ---
+
+        function handleAddUser(e) {
+            e.preventDefault();
+            var payload = {
+                action: "addUser",
+                newName: document.getElementById("newName").value,
+                newEmail: document.getElementById("newEmail").value,
+                newPassword: document.getElementById("newPassword").value,
+                newRole: document.getElementById("newRole").value
+            };
+            
+            var msgTag = document.getElementById("addUserMsg");
+            msgTag.innerText = "Adding user...";
+            msgTag.className = "text-sm mt-2 font-medium text-blue-600";
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    msgTag.innerText = "User added successfully!";
+                    msgTag.className = "text-sm mt-2 font-medium text-green-600";
+                    e.target.reset();
+                } else {
+                    msgTag.innerText = "Error: " + data.message;
+                    msgTag.className = "text-sm mt-2 font-medium text-red-600";
+                }
+            });
+        }
+
+        function handleScriptSubmit(e) {
+            e.preventDefault();
+            var btn = document.getElementById("submitBtn");
+            var msg = document.getElementById("submitMsg");
+            
+            btn.disabled = true;
+            btn.innerText = "Generating Doc & Submitting...";
+            msg.innerText = "";
+
+            var payload = {
+                reporterName: currentUser.name,
+                reporterId: currentUser.email, // চাইলে আইডি আলাদা রাখতে পারেন
+                reporterEmail: currentUser.email,
+                category: document.getElementById("newsCategory").value,
+                slug: document.getElementById("newsSlug").value,
+                title: document.getElementById("newsTitle").value,
+                thumbText: document.getElementById("newsThumbText").value,
+                story: document.getElementById("newsStory").value,
+                payoff: document.getElementById("newsPayoff").value
+            };
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerText = "Submit Script";
+                if(data.status === "success") {
+                    msg.innerHTML = `Success! Unique ID: <b>${data.uniqueId}</b>. <a href="${data.docUrl}" target="_blank" class="text-blue-600 underline ml-2">Open Google Doc</a>`;
+                    msg.className = "text-sm font-medium text-green-600 mt-2";
+                    e.target.reset();
+                    if(document.getElementById("scriptTableBody")) loadScripts();
+                } else {
+                    msg.innerText = "Failed: " + data.message;
+                    msg.className = "text-sm font-medium text-red-600 mt-2";
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = "Submit Script";
+                msg.innerText = "Network error!";
+                msg.className = "text-sm font-medium text-red-600 mt-2";
+            });
+        }
+
+        function loadScripts() {
+            fetch(WEB_APP_URL + "?action=getScripts")
+            .then(res => res.json())
+            .then(data => {
+                var tbody = document.getElementById("scriptTableBody");
+                if(!tbody) return;
+                tbody.innerHTML = "";
+                
+                if(data.status === "success" && data.scripts.length > 0) {
+                    data.scripts.forEach((item, index) => {
+                        var tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td class="px-4 py-3 text-sm font-semibold text-gray-700">${item.uniqueId}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">${item.category}</td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
+                                <div class="font-bold">${item.title}</div>
+                                <div class="text-xs text-gray-500">By: ${item.reporterName}</div>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <a href="${item.docUrl}" target="_blank" class="text-blue-600 underline font-medium">Open Doc</a>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-2 py-1 rounded text-xs font-semibold ${item.status === 'Approved' ? 'bg-green-100 text-green-800' : (item.status === 'Re-Edit' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800')}">
+                                    ${item.status}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <select onchange="updateStatus(${index}, this.value)" class="border rounded p-1 text-xs">
+                                    <option value="In Review" ${item.status === 'In Review' ? 'selected' : ''}>In Review</option>
+                                    <option value="Approved" ${item.status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                    <option value="Re-Edit" ${item.status === 'Re-Edit' ? 'selected' : ''}>Re-Edit</option>
+                                </select>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">No scripts found!</td></tr>`;
+                }
+            });
+        }
+
+        function updateStatus(rowIndex, newStatus) {
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "updateStatus",
+                    row: rowIndex + 2, // হেডার বাদে সঠিক রো ইনডেক্স
+                    status: newStatus
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    loadScripts();
+                } else {
+                    alert("Failed to update status!");
+                }
+            });
         }
     </script>
 </body>
