@@ -20,11 +20,11 @@
         .container { max-width: 1100px; margin: auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .hidden { display: none !important; }
         
-        h2, h3 { color: var(--primary); margin-top: 0; }
+        h2, h3, h4 { color: var(--primary); margin-top: 0; }
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 16px 0; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         
-        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: background 0.2s; display: inline-block; text-align: center; }
+        .btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; display: inline-block; text-align: center; }
         .btn:hover { opacity: 0.9; }
         .btn-danger { background: var(--danger); }
         .btn-success { background: var(--success); }
@@ -39,12 +39,6 @@
         
         .password-container { position: relative; }
         .toggle-password { position: absolute; right: 12px; top: 15px; cursor: pointer; font-size: 14px; color: #64748b; user-select: none; }
-
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block; }
-        .status-review { background: var(--warning); }
-        .status-approved { background: var(--success); }
-        .status-rejected { background: var(--danger); }
-
         .panel-nav-btns { margin-bottom: 20px; display: flex; gap: 10px; }
     </style>
 </head>
@@ -55,7 +49,7 @@
     <div id="loginSection">
         <h2>Newsroom Management System</h2>
         <h3>Login Portal</h3>
-        <input type="email" id="loginEmail" placeholder="Enter your email (e.g., admin@news.com)">
+        <input type="email" id="loginEmail" placeholder="Enter your email">
         <div class="password-container">
             <input type="password" id="loginPassword" placeholder="Enter password">
             <span class="toggle-password" onclick="togglePasswordVisibility()">👁️ Show</span>
@@ -64,7 +58,7 @@
         <p id="loginMsg" style="color:red; font-weight: 600; margin-top: 10px;"></p>
     </div>
 
-    <!-- Main App Dashboard -->
+    <!-- Main Dashboard -->
     <div id="appDashboard" class="hidden">
         <div class="navbar">
             <div>
@@ -74,13 +68,13 @@
             <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
         </div>
 
-        <!-- Universal Navigation for Panels -->
         <div class="panel-nav-btns" id="commonNavBtns">
-            <button class="btn btn-secondary" onclick="switchView('dashboardView')">📋 Dashboard / History</button>
+            <button class="btn btn-secondary" onclick="switchView('dashboardView')">📋 Dashboard & Script History</button>
             <button class="btn" onclick="switchView('scriptFormView')">✍️ Script Writing Form</button>
+            <button id="adminNavBtn" class="btn btn-success hidden" onclick="switchView('adminUserView')">⚙️ Manage Users (Admin)</button>
         </div>
 
-        <!-- 1. Script Writing Form View -->
+        <!-- 1. Script Writing Form -->
         <div id="scriptFormView" class="hidden">
             <h3>Script Submission & Draft Panel</h3>
             <input type="text" id="repNameInput" placeholder="Reporter Name">
@@ -102,41 +96,22 @@
                 <option value="Special News">Special News</option>
             </select>
             
-            <input type="text" id="newsSlug" placeholder="Slug (e.g., Metro_Rail_Update)">
-            <input type="text" id="newsTitle" placeholder="Title (Main news title)">
-            <input type="text" id="newsThumb" placeholder="Thumb Text (Short text for screen)">
-            <textarea id="newsStory" rows="6" placeholder="Write main story detail here..."></textarea>
-            <input type="text" id="newsPayoff" placeholder="Pay-off (e.g., Reporter, Dhaka)">
+            <input type="text" id="newsSlug" placeholder="Slug">
+            <input type="text" id="newsTitle" placeholder="Title">
+            <input type="text" id="newsThumb" placeholder="Thumb Text">
+            <textarea id="newsStory" rows="5" placeholder="Story Content..."></textarea>
+            <input type="text" id="newsPayoff" placeholder="Pay-off">
             
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
-                <button class="btn btn-success" onclick="submitScript()">🚀 Submit Final Script & Create Google Doc</button>
-            </div>
+            <button class="btn btn-success" onclick="submitScript()">🚀 Submit Script & Create Google Doc</button>
             <p id="submitMsg" style="font-weight: bold; margin-top: 10px;"></p>
         </div>
 
-        <!-- 2. Dashboard & History View (Admin, Editor, Desk, Reporter) -->
+        <!-- 2. Dashboard View / Script History -->
         <div id="dashboardView">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 id="panelTitle">Script History & Status Checking</h3>
+                <h3>Script History & Status Checking</h3>
                 <button class="btn" onclick="loadDeskData()">🔄 Refresh List</button>
             </div>
-
-            <!-- Admin Special Management Area -->
-            <div id="adminManagementArea" class="hidden" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h4>⚙️ Admin Controls: Manage Users</h4>
-                <input type="text" id="newUserName" placeholder="Full Name">
-                <input type="email" id="newUserEmail" placeholder="Email Address">
-                <input type="password" id="newUserPassword" placeholder="Password">
-                <select id="newUserRole">
-                    <option value="Reporter">Reporter</option>
-                    <option value="Desk-In-charge">Desk-In-charge</option>
-                    <option value="Editor">Editor</option>
-                    <option value="Admin">Admin</option>
-                </select>
-                <button class="btn btn-success" onclick="alert('User feature connected to backend system!')">Add New User</button>
-            </div>
-
             <table>
                 <thead>
                     <tr>
@@ -152,18 +127,50 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- 3. Admin User Management View -->
+        <div id="adminUserView" class="hidden">
+            <h3>⚙️ Admin Panel: User Management</h3>
+            <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4>Add New User</h4>
+                <input type="text" id="newUserName" placeholder="Full Name">
+                <input type="email" id="newUserEmail" placeholder="Email Address">
+                <input type="password" id="newUserPassword" placeholder="Password">
+                <select id="newUserRole">
+                    <option value="Reporter">Reporter</option>
+                    <option value="Desk-In-charge">Desk-In-charge</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <button class="btn btn-success" onclick="addNewUser()">Add User to System</button>
+                <p id="userMsg" style="font-weight: bold; margin-top: 5px;"></p>
+            </div>
+
+            <h4>Existing Users List</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr><td colspan="4" style="text-align:center;">Loading users...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP1Gqo6XllYjD934YlQ40nB8XVye2Jh7F9NhXcuyB8iDlNX5P3VzOsf-M8CGk4wjdRYw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyimFdnZOG-PaHZWupNL3gZuj0kqfDz4Nqliwb9N6k-BCyWxqQ5n3EsDDmKMKkZ6_MlXg/exec";
 
-    // Session Persistence Check on Load
     window.onload = function() {
         const savedUser = localStorage.getItem("newsroom_user");
         if(savedUser) {
-            const userData = JSON.parse(savedUser);
-            setupDashboard(userData);
+            setupDashboard(JSON.parse(savedUser));
         }
     };
 
@@ -189,8 +196,7 @@
             return;
         }
 
-        msg.innerText = "Authenticating...";
-
+        msg.innerText = "Logging in...";
         fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({ action: "login", email: email, password: password })
@@ -204,29 +210,23 @@
                 msg.innerText = data.message;
             }
         })
-        .catch(err => {
-            msg.innerText = "Connection Error!";
-            console.error(err);
-        });
+        .catch(err => { msg.innerText = "Connection Error!"; });
     }
 
     function setupDashboard(data) {
         document.getElementById("loginSection").classList.add("hidden");
         document.getElementById("appDashboard").classList.remove("hidden");
-        
         document.getElementById("userNameDisplay").innerText = data.name;
         document.getElementById("userRoleDisplay").innerText = data.role;
         
-        // Auto fill reporter info if available
         document.getElementById("repNameInput").value = data.name || "";
         document.getElementById("repEmailInput").value = data.email || "";
 
-        // Role-based UI Customization
-        const adminArea = document.getElementById("adminManagementArea");
+        const adminNavBtn = document.getElementById("adminNavBtn");
         if(data.role === "Admin") {
-            adminArea.classList.remove("hidden");
+            adminNavBtn.classList.remove("hidden");
         } else {
-            adminArea.classList.add("hidden");
+            adminNavBtn.classList.add("hidden");
         }
 
         switchView('dashboardView');
@@ -235,21 +235,93 @@
 
     function handleLogout() {
         localStorage.removeItem("newsroom_user");
-        document.getElementById("appDashboard").classList.add("hidden");
-        document.getElementById("loginSection").classList.remove("hidden");
-        document.getElementById("loginEmail").value = "";
-        document.getElementById("loginPassword").value = "";
-        document.getElementById("loginMsg").value = "";
+        location.reload();
     }
 
     function switchView(viewId) {
         document.getElementById("scriptFormView").classList.add("hidden");
         document.getElementById("dashboardView").classList.add("hidden");
+        document.getElementById("adminUserView").classList.add("hidden");
         document.getElementById(viewId).classList.remove("hidden");
+
+        if(viewId === 'adminUserView') {
+            loadUserList();
+        }
     }
 
-    function saveDraft() {
-        alert("Draft saved locally on your browser successfully!");
+    function addNewUser() {
+        const payload = {
+            action: "addUser",
+            name: document.getElementById("newUserName").value,
+            email: document.getElementById("newUserEmail").value,
+            password: document.getElementById("newUserPassword").value,
+            role: document.getElementById("newUserRole").value
+        };
+
+        if(!payload.name || !payload.email || !payload.password) {
+            alert("Please fill all user fields!");
+            return;
+        }
+
+        document.getElementById("userMsg").innerText = "Adding user...";
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") {
+                document.getElementById("userMsg").style.color = "green";
+                document.getElementById("userMsg").innerText = "User added successfully!";
+                loadUserList();
+                document.getElementById("newUserName").value = "";
+                document.getElementById("newUserEmail").value = "";
+                document.getElementById("newUserPassword").value = "";
+            } else {
+                document.getElementById("userMsg").style.color = "red";
+                document.getElementById("userMsg").innerText = "Error!";
+            }
+        });
+    }
+
+    function loadUserList() {
+        fetch(SCRIPT_URL + "?action=getUsers")
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById("userTableBody");
+            tbody.innerHTML = "";
+            if(data.status === "success" && data.users.length > 0) {
+                data.users.forEach(user => {
+                    let tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><b>${user.role}</b></td>
+                        <td><button class="btn btn-danger" style="padding: 5px 10px; font-size:12px;" onclick="deleteUser(${user.rowNumber})">Remove</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No users found.</td></tr>`;
+            }
+        });
+    }
+
+    function deleteUser(rowNum) {
+        if(confirm("Are you sure you want to remove this user?")) {
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "deleteUser", row: rowNum })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    loadUserList();
+                } else {
+                    alert("Failed to delete user.");
+                }
+            });
+        }
     }
 
     function submitScript() {
@@ -266,12 +338,11 @@
         };
 
         if(!payload.reporterId || !payload.category || !payload.slug || !payload.title) {
-            alert("Please fill in all required fields!");
+            alert("Please fill required fields!");
             return;
         }
 
         document.getElementById("submitMsg").innerText = "Creating Google Doc & Submitting...";
-
         fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify(payload)
@@ -279,17 +350,13 @@
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
-                document.getElementById("submitMsgstyle").color = "green";
+                document.getElementById("submitMsg").style.color = "green";
                 document.getElementById("submitMsg").innerHTML = `Success! ID: ${data.uniqueId} | <a href="${data.docUrl}" target="_blank">Open Google Doc</a>`;
                 loadDeskData();
             } else {
                 document.getElementById("submitMsg").style.color = "red";
                 document.getElementById("submitMsg").innerText = "Error: " + data.message;
             }
-        })
-        .catch(err => {
-            alert("Submission failed.");
-            console.error(err);
         });
     }
 
@@ -299,16 +366,11 @@
         .then(data => {
             const tbody = document.getElementById("deskTableBody");
             tbody.innerHTML = "";
-
             const currentUser = JSON.parse(localStorage.getItem("newsroom_user") || "{}");
             const canChangeStatus = ["Admin", "Editor", "Desk-In-charge"].includes(currentUser.role);
 
             if(data.status === "success" && data.scripts && data.scripts.length > 0) {
                 data.scripts.forEach(script => {
-                    let badgeClass = "status-review";
-                    if(script.status === "Approved") badgeClass = "status-approved";
-                    if(script.status === "Rejected") badgeClass = "status-rejected";
-
                     let tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td><strong>${script.uniqueId}</strong><br><small style="color:gray;">🕒 ${script.timestamp}</small></td>
@@ -322,7 +384,7 @@
                                     <option value="Approved" ${script.status === "Approved" ? "selected" : ""}>Approved</option>
                                     <option value="Rejected" ${script.status === "Rejected" ? "selected" : ""}>Rejected</option>
                                 </select>
-                            ` : `<span class="badge ${badgeClass}">${script.status}</span>`}
+                            ` : `<span>${script.status}</span>`}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -330,22 +392,13 @@
             } else {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No scripts found.</td></tr>`;
             }
-        })
-        .catch(err => console.error("Error loading data:", err));
+        });
     }
 
     function updateStatus(rowNumber, newStatus) {
         fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({ action: "updateStatus", row: rowNumber, status: newStatus })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status !== "success") {
-                alert("Failed to update status!");
-            } else {
-                loadDeskData();
-            }
         });
     }
 </script>
