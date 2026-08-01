@@ -13,7 +13,6 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
         th { background: #f2f2f2; }
-        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -85,7 +84,8 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP1Gqo6XllYjD934YlQ40nB8XVye2Jh7F9NhXcuyB8iDlNX5P3VzOsf-M8CGk4wjdRYw/exec";
+    // নতুন ডিপ্লয় করা ওয়েব অ্যাপ লিংক এখানে দিন:
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyV8xzl4SviLZFD6pJBEzKt3MyKaTbQzux8UloR84QnP_crJZ440NVg8GU0PZtIkNUfzA/exec";
 
     function handleLogin() {
         const email = document.getElementById("loginEmail").value.trim();
@@ -168,13 +168,15 @@
     }
 
     function loadDeskData() {
+        console.log("Fetching desk data...");
         fetch(SCRIPT_URL + "?action=getScripts")
         .then(res => res.json())
         .then(data => {
+            console.log("API Response received:", data);
             const tbody = document.getElementById("deskTableBody");
             tbody.innerHTML = "";
 
-            if(data.status === "success" && data.scripts.length > 0) {
+            if(data.status === "success" && data.scripts && data.scripts.length > 0) {
                 data.scripts.forEach(script => {
                     let tr = document.createElement("tr");
                     tr.innerHTML = `
@@ -197,7 +199,10 @@
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No scripts found.</td></tr>`;
             }
         })
-        .catch(err => console.error("Error loading desk data:", err));
+        .catch(err => {
+            console.error("Error loading desk data:", err);
+            document.getElementById("deskTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Failed to load data!</td></tr>`;
+        });
     }
 
     function updateStatus(rowNumber, newStatus) {
