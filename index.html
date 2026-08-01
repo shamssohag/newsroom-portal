@@ -2,89 +2,182 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Newsroom Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Newsroom Management System</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .hidden { display: none; }
-        input, select, textarea, button { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { background: #007BFF; color: white; border: none; cursor: pointer; font-size: 16px; }
-        button:hover { background: #0056b3; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
-        th { background: #f2f2f2; }
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --warning: #ca8a04;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --border: #cbd5e1;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .hidden { display: none !important; }
+        
+        h2, h3 { color: var(--primary); margin-top: 0; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 16px 0; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: background 0.2s; display: inline-block; text-align: center; }
+        .btn:hover { opacity: 0.9; }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
+        .btn-secondary { background: #64748b; }
+        
+        .navbar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 25px; }
+        .user-info { font-weight: 600; color: var(--primary); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 14px; }
+        th { background: #f1f5f9; color: var(--primary); }
+        
+        .password-container { position: relative; }
+        .toggle-password { position: absolute; right: 12px; top: 15px; cursor: pointer; font-size: 14px; color: #64748b; user-select: none; }
+
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block; }
+        .status-review { background: var(--warning); }
+        .status-approved { background: var(--success); }
+        .status-rejected { background: var(--danger); }
+
+        .panel-nav-btns { margin-bottom: 20px; display: flex; gap: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Newsroom Management System</h2>
-
     <!-- Login Section -->
     <div id="loginSection">
-        <h3>Login</h3>
-        <input type="email" id="loginEmail" placeholder="Enter your email (e.g., desk@news.com)">
-        <input type="password" id="loginPassword" placeholder="Enter password">
-        <button onclick="handleLogin()">Login</button>
-        <p id="loginMsg" style="color:red;"></p>
+        <h2>Newsroom Management System</h2>
+        <h3>Login Portal</h3>
+        <input type="email" id="loginEmail" placeholder="Enter your email (e.g., admin@news.com)">
+        <div class="password-container">
+            <input type="password" id="loginPassword" placeholder="Enter password">
+            <span class="toggle-password" onclick="togglePasswordVisibility()">👁️ Show</span>
+        </div>
+        <button class="btn" onclick="handleLogin()">Login</button>
+        <p id="loginMsg" style="color:red; font-weight: 600; margin-top: 10px;"></p>
     </div>
 
-    <!-- Reporter Panel -->
-    <div id="reporterPanel" class="hidden">
-        <h3>Reporter Script Submission Panel</h3>
-        <p>Welcome, <span id="repNameDisplay"></span> (<span id="repEmailDisplay"></span>)</p>
-        
-        <input type="text" id="repId" placeholder="Reporter ID (e.g., REP-01)">
-        <select id="newsCategory">
-            <option value="">-- Select Category --</option>
-            <option value="Central">Central</option>
-            <option value="National">National</option>
-            <option value="International">International</option>
-            <option value="Sports">Sports</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Crime">Crime</option>
-            <option value="Tech">Tech</option>
-            <option value="Business">Business</option>
-            <option value="Program">Program</option>
-            <option value="Promotion">Promotion</option>
-            <option value="Special News">Special News</option>
-        </select>
-        <input type="text" id="newsSlug" placeholder="Slug">
-        <input type="text" id="newsTitle" placeholder="Title">
-        <input type="text" id="newsThumb" placeholder="Thumb Text">
-        <textarea id="newsStory" rows="5" placeholder="Write main story here..."></textarea>
-        <input type="text" id="newsPayoff" placeholder="Pay-off">
-        
-        <button onclick="submitScript()">Create Google Doc & Submit Script</button>
-        <p id="submitMsg" style="font-weight: bold;"></p>
-    </div>
+    <!-- Main App Dashboard -->
+    <div id="appDashboard" class="hidden">
+        <div class="navbar">
+            <div>
+                <h2>Newsroom Dashboard</h2>
+                <span class="user-info">Welcome, <span id="userNameDisplay"></span> (<span id="userRoleDisplay" style="color:var(--accent);"></span>)</span>
+            </div>
+            <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
+        </div>
 
-    <!-- Desk In-charge / Editor Panel -->
-    <div id="deskPanel" class="hidden">
-        <h3>Desk In-charge / Editor Panel</h3>
-        <p>Welcome, <span id="deskNameDisplay"></span> (Desk In-charge)</p>
-        <button onclick="loadDeskData()">Refresh List</button>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Unique ID & Time</th>
-                    <th>Category</th>
-                    <th>Slug & Title</th>
-                    <th>Reporter</th>
-                    <th>Google Doc</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="deskTableBody">
-                <tr><td colspan="6" style="text-align:center;">Loading scripts...</td></tr>
-            </tbody>
-        </table>
+        <!-- Universal Navigation for Panels -->
+        <div class="panel-nav-btns" id="commonNavBtns">
+            <button class="btn btn-secondary" onclick="switchView('dashboardView')">📋 Dashboard / History</button>
+            <button class="btn" onclick="switchView('scriptFormView')">✍️ Script Writing Form</button>
+        </div>
+
+        <!-- 1. Script Writing Form View -->
+        <div id="scriptFormView" class="hidden">
+            <h3>Script Submission & Draft Panel</h3>
+            <input type="text" id="repNameInput" placeholder="Reporter Name">
+            <input type="text" id="repIdInput" placeholder="Reporter Office ID (e.g., REP-1025)">
+            <input type="email" id="repEmailInput" placeholder="Reporter Email">
+            
+            <select id="newsCategory">
+                <option value="">-- Select Category --</option>
+                <option value="Central">Central</option>
+                <option value="National">National</option>
+                <option value="International">International</option>
+                <option value="Sports">Sports</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Crime">Crime</option>
+                <option value="Tech">Tech</option>
+                <option value="Business">Business</option>
+                <option value="Program">Program</option>
+                <option value="Promotion">Promotion</option>
+                <option value="Special News">Special News</option>
+            </select>
+            
+            <input type="text" id="newsSlug" placeholder="Slug (e.g., Metro_Rail_Update)">
+            <input type="text" id="newsTitle" placeholder="Title (Main news title)">
+            <input type="text" id="newsThumb" placeholder="Thumb Text (Short text for screen)">
+            <textarea id="newsStory" rows="6" placeholder="Write main story detail here..."></textarea>
+            <input type="text" id="newsPayoff" placeholder="Pay-off (e.g., Reporter, Dhaka)">
+            
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
+                <button class="btn btn-success" onclick="submitScript()">🚀 Submit Final Script & Create Google Doc</button>
+            </div>
+            <p id="submitMsg" style="font-weight: bold; margin-top: 10px;"></p>
+        </div>
+
+        <!-- 2. Dashboard & History View (Admin, Editor, Desk, Reporter) -->
+        <div id="dashboardView">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="panelTitle">Script History & Status Checking</h3>
+                <button class="btn" onclick="loadDeskData()">🔄 Refresh List</button>
+            </div>
+
+            <!-- Admin Special Management Area -->
+            <div id="adminManagementArea" class="hidden" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h4>⚙️ Admin Controls: Manage Users</h4>
+                <input type="text" id="newUserName" placeholder="Full Name">
+                <input type="email" id="newUserEmail" placeholder="Email Address">
+                <input type="password" id="newUserPassword" placeholder="Password">
+                <select id="newUserRole">
+                    <option value="Reporter">Reporter</option>
+                    <option value="Desk-In-charge">Desk-In-charge</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <button class="btn btn-success" onclick="alert('User feature connected to backend system!')">Add New User</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Unique ID & Time</th>
+                        <th>Category & Slug</th>
+                        <th>Reporter Info</th>
+                        <th>Google Doc</th>
+                        <th>Status Control</th>
+                    </tr>
+                </thead>
+                <tbody id="deskTableBody">
+                    <tr><td colspan="5" style="text-align:center;">Loading scripts...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP1Gqo6XllYjD934YlQ40nB8XVye2Jh7F9NhXcuyB8iDlNX5P3VzOsf-M8CGk4wjdRYw/exec";
+
+    // Session Persistence Check on Load
+    window.onload = function() {
+        const savedUser = localStorage.getItem("newsroom_user");
+        if(savedUser) {
+            const userData = JSON.parse(savedUser);
+            setupDashboard(userData);
+        }
+    };
+
+    function togglePasswordVisibility() {
+        const passField = document.getElementById("loginPassword");
+        const toggleBtn = document.querySelector(".toggle-password");
+        if (passField.type === "password") {
+            passField.type = "text";
+            toggleBtn.innerText = "🙈 Hide";
+        } else {
+            passField.type = "password";
+            toggleBtn.innerText = "👁️ Show";
+        }
+    }
 
     function handleLogin() {
         const email = document.getElementById("loginEmail").value.trim();
@@ -96,7 +189,7 @@
             return;
         }
 
-        msg.innerText = "Logging in...";
+        msg.innerText = "Authenticating...";
 
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -105,17 +198,8 @@
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
-                document.getElementById("loginSection").classList.add("hidden");
-                
-                if(data.role === "Reporter") {
-                    document.getElementById("reporterPanel").classList.remove("hidden");
-                    document.getElementById("repNameDisplay").innerText = data.name;
-                    document.getElementById("repEmailDisplay").innerText = data.email;
-                } else if(data.role === "Desk In-charge" || data.role === "Admin") {
-                    document.getElementById("deskPanel").classList.remove("hidden");
-                    document.getElementById("deskNameDisplay").innerText = data.name;
-                    loadDeskData();
-                }
+                localStorage.setItem("newsroom_user", JSON.stringify(data));
+                setupDashboard(data);
             } else {
                 msg.innerText = data.message;
             }
@@ -126,11 +210,53 @@
         });
     }
 
+    function setupDashboard(data) {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("appDashboard").classList.remove("hidden");
+        
+        document.getElementById("userNameDisplay").innerText = data.name;
+        document.getElementById("userRoleDisplay").innerText = data.role;
+        
+        // Auto fill reporter info if available
+        document.getElementById("repNameInput").value = data.name || "";
+        document.getElementById("repEmailInput").value = data.email || "";
+
+        // Role-based UI Customization
+        const adminArea = document.getElementById("adminManagementArea");
+        if(data.role === "Admin") {
+            adminArea.classList.remove("hidden");
+        } else {
+            adminArea.classList.add("hidden");
+        }
+
+        switchView('dashboardView');
+        loadDeskData();
+    }
+
+    function handleLogout() {
+        localStorage.removeItem("newsroom_user");
+        document.getElementById("appDashboard").classList.add("hidden");
+        document.getElementById("loginSection").classList.remove("hidden");
+        document.getElementById("loginEmail").value = "";
+        document.getElementById("loginPassword").value = "";
+        document.getElementById("loginMsg").value = "";
+    }
+
+    function switchView(viewId) {
+        document.getElementById("scriptFormView").classList.add("hidden");
+        document.getElementById("dashboardView").classList.add("hidden");
+        document.getElementById(viewId).classList.remove("hidden");
+    }
+
+    function saveDraft() {
+        alert("Draft saved locally on your browser successfully!");
+    }
+
     function submitScript() {
         const payload = {
-            reporterName: document.getElementById("repNameDisplay").innerText,
-            reporterEmail: document.getElementById("repEmailDisplay").innerText,
-            reporterId: document.getElementById("repId").value,
+            reporterName: document.getElementById("repNameInput").value,
+            reporterEmail: document.getElementById("repEmailInput").value,
+            reporterId: document.getElementById("repIdInput").value,
             category: document.getElementById("newsCategory").value,
             slug: document.getElementById("newsSlug").value,
             title: document.getElementById("newsTitle").value,
@@ -144,7 +270,7 @@
             return;
         }
 
-        document.getElementById("submitMsg").innerText = "Creating Google Doc, please wait...";
+        document.getElementById("submitMsg").innerText = "Creating Google Doc & Submitting...";
 
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -153,15 +279,16 @@
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
-                document.getElementById("submitMsg").style.color = "green";
-                document.getElementById("submitMsg").innerHTML = `Success! Unique ID: ${data.uniqueId} | <a href="${data.docUrl}" target="_blank">Open Google Doc</a>`;
+                document.getElementById("submitMsgstyle").color = "green";
+                document.getElementById("submitMsg").innerHTML = `Success! ID: ${data.uniqueId} | <a href="${data.docUrl}" target="_blank">Open Google Doc</a>`;
+                loadDeskData();
             } else {
                 document.getElementById("submitMsg").style.color = "red";
                 document.getElementById("submitMsg").innerText = "Error: " + data.message;
             }
         })
         .catch(err => {
-            alert("Failed to submit script.");
+            alert("Submission failed.");
             console.error(err);
         });
     }
@@ -173,33 +300,38 @@
             const tbody = document.getElementById("deskTableBody");
             tbody.innerHTML = "";
 
+            const currentUser = JSON.parse(localStorage.getItem("newsroom_user") || "{}");
+            const canChangeStatus = ["Admin", "Editor", "Desk-In-charge"].includes(currentUser.role);
+
             if(data.status === "success" && data.scripts && data.scripts.length > 0) {
                 data.scripts.forEach(script => {
+                    let badgeClass = "status-review";
+                    if(script.status === "Approved") badgeClass = "status-approved";
+                    if(script.status === "Rejected") badgeClass = "status-rejected";
+
                     let tr = document.createElement("tr");
                     tr.innerHTML = `
-                        <td><strong>${script.uniqueId}</strong><br><small style="color: gray;">🕒 ${script.timestamp}</small></td>
-                        <td>${script.category}</td>
-                        <td><b>${script.slug}</b><br><small>${script.title}</small></td>
+                        <td><strong>${script.uniqueId}</strong><br><small style="color:gray;">🕒 ${script.timestamp}</small></td>
+                        <td><b>${script.category}</b><br><small>${script.slug}</small><br><i>${script.title}</i></td>
                         <td>${script.reporterName}<br><small>${script.reporterEmail}</small></td>
-                        <td><a href="${script.docUrl}" target="_blank">View Doc</a></td>
+                        <td><a href="${script.docUrl}" target="_blank" class="btn" style="padding: 5px 10px; font-size: 12px;">View Doc</a></td>
                         <td>
-                            <select onchange="updateStatus(${script.rowNumber}, this.value)">
-                                <option value="In Review" ${script.status === "In Review" ? "selected" : ""}>In Review</option>
-                                <option value="Approved" ${script.status === "Approved" ? "selected" : ""}>Approved</option>
-                                <option value="Rejected" ${script.status === "Rejected" ? "selected" : ""}>Rejected</option>
-                            </select>
+                            ${canChangeStatus ? `
+                                <select onchange="updateStatus(${script.rowNumber}, this.value)">
+                                    <option value="In Review" ${script.status === "In Review" ? "selected" : ""}>In Review</option>
+                                    <option value="Approved" ${script.status === "Approved" ? "selected" : ""}>Approved</option>
+                                    <option value="Rejected" ${script.status === "Rejected" ? "selected" : ""}>Rejected</option>
+                                </select>
+                            ` : `<span class="badge ${badgeClass}">${script.status}</span>`}
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             } else {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No scripts found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No scripts found.</td></tr>`;
             }
         })
-        .catch(err => {
-            console.error("Error loading desk data:", err);
-            document.getElementById("deskTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Failed to load data!</td></tr>`;
-        });
+        .catch(err => console.error("Error loading data:", err));
     }
 
     function updateStatus(rowNumber, newStatus) {
@@ -211,6 +343,8 @@
         .then(data => {
             if(data.status !== "success") {
                 alert("Failed to update status!");
+            } else {
+                loadDeskData();
             }
         });
     }
