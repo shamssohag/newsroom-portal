@@ -5,7 +5,7 @@
     <title>Newsroom Management System</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .hidden { display: none; }
         input, select, textarea, button { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
         button { background: #007BFF; color: white; border: none; cursor: pointer; font-size: 16px; }
@@ -68,7 +68,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Unique ID</th>
+                    <th>Unique ID & Time</th>
                     <th>Category</th>
                     <th>Slug & Title</th>
                     <th>Reporter</th>
@@ -84,8 +84,7 @@
 </div>
 
 <script>
-    // নতুন ডিপ্লয় করা ওয়েব অ্যাপ লিংক এখানে দিন:
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyV8xzl4SviLZFD6pJBEzKt3MyKaTbQzux8UloR84QnP_crJZ440NVg8GU0PZtIkNUfzA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP1Gqo6XllYjD934YlQ40nB8XVye2Jh7F9NhXcuyB8iDlNX5P3VzOsf-M8CGk4wjdRYw/exec";
 
     function handleLogin() {
         const email = document.getElementById("loginEmail").value.trim();
@@ -168,11 +167,9 @@
     }
 
     function loadDeskData() {
-        console.log("Fetching desk data...");
         fetch(SCRIPT_URL + "?action=getScripts")
         .then(res => res.json())
         .then(data => {
-            console.log("API Response received:", data);
             const tbody = document.getElementById("deskTableBody");
             tbody.innerHTML = "";
 
@@ -180,7 +177,7 @@
                 data.scripts.forEach(script => {
                     let tr = document.createElement("tr");
                     tr.innerHTML = `
-                        <td><strong>${script.uniqueId}</strong></td>
+                        <td><strong>${script.uniqueId}</strong><br><small style="color: gray;">🕒 ${script.timestamp}</small></td>
                         <td>${script.category}</td>
                         <td><b>${script.slug}</b><br><small>${script.title}</small></td>
                         <td>${script.reporterName}<br><small>${script.reporterEmail}</small></td>
