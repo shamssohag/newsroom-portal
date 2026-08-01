@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Newsroom Management System</title>
@@ -14,30 +14,30 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
         th { background: #f2f2f2; }
         .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
-        .bg-review { background: #ffc107; color: black; }
-        .bg-approved { background: #28a745; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>নিউজরুম ম্যানেজমেন্ট সিস্টেম</h2>
+    <h2>Newsroom Management System</h2>
 
+    <!-- Login Section -->
     <div id="loginSection">
-        <h3>লগইন করুন</h3>
-        <input type="email" id="loginEmail" placeholder="আপনার ইমেইল দিন (যেমন: desk@news.com)">
-        <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
-        <button onclick="handleLogin()">লগইন</button>
+        <h3>Login</h3>
+        <input type="email" id="loginEmail" placeholder="Enter your email (e.g., desk@news.com)">
+        <input type="password" id="loginPassword" placeholder="Enter password">
+        <button onclick="handleLogin()">Login</button>
         <p id="loginMsg" style="color:red;"></p>
     </div>
 
+    <!-- Reporter Panel -->
     <div id="reporterPanel" class="hidden">
-        <h3>রিপোর্টার স্ক্রিপ্ট সাবমিশন প্যানেল</h3>
-        <p>স্বাগতম, <span id="repNameDisplay"></span> (<span id="repEmailDisplay"></span>)</p>
+        <h3>Reporter Script Submission Panel</h3>
+        <p>Welcome, <span id="repNameDisplay"></span> (<span id="repEmailDisplay"></span>)</p>
         
-        <input type="text" id="repId" placeholder="রিপোর্টার আইডি (যেমন: REP-01)">
+        <input type="text" id="repId" placeholder="Reporter ID (e.g., REP-01)">
         <select id="newsCategory">
-            <option value="">-- ক্যাটাগরি সিলেক্ট করুন --</option>
+            <option value="">-- Select Category --</option>
             <option value="Central">Central</option>
             <option value="National">National</option>
             <option value="International">International</option>
@@ -50,42 +50,42 @@
             <option value="Promotion">Promotion</option>
             <option value="Special News">Special News</option>
         </select>
-        <input type="text" id="newsSlug" placeholder="স্লাগ (Slug)">
-        <input type="text" id="newsTitle" placeholder="শিরোনাম (Title)">
-        <input type="text" id="newsThumb" placeholder="থাম্বনেইল টেক্সট (Thumb Text)">
-        <textarea id="newsStory" rows="5" placeholder="মূল স্টোরি লিখুন..."></textarea>
-        <input type="text" id="newsPayoff" placeholder="পে-অফ (Pay-off)">
+        <input type="text" id="newsSlug" placeholder="Slug">
+        <input type="text" id="newsTitle" placeholder="Title">
+        <input type="text" id="newsThumb" placeholder="Thumb Text">
+        <textarea id="newsStory" rows="5" placeholder="Write main story here..."></textarea>
+        <input type="text" id="newsPayoff" placeholder="Pay-off">
         
-        <button onclick="submitScript()">গুগল ডক ও স্ক্রিপ্ট সাবমিট করুন</button>
+        <button onclick="submitScript()">Create Google Doc & Submit Script</button>
         <p id="submitMsg" style="font-weight: bold;"></p>
     </div>
 
+    <!-- Desk In-charge / Editor Panel -->
     <div id="deskPanel" class="hidden">
-        <h3>ডেস্ক ইন-চার্জ / এডিটর প্যানেল</h3>
-        <p>স্বাগতম, <span id="deskNameDisplay"></span> (Desk In-charge)</p>
-        <button onclick="loadDeskData()">ডেটা রিফ্রেশ করুন</button>
+        <h3>Desk In-charge / Editor Panel</h3>
+        <p>Welcome, <span id="deskNameDisplay"></span> (Desk In-charge)</p>
+        <button onclick="loadDeskData()">Refresh List</button>
         
         <table>
             <thead>
                 <tr>
-                    <th>ইউনিক আইডি</th>
-                    <th>ক্যাটাগরি</th>
-                    <th>স্লাগ ও টাইটেল</th>
-                    <th>রিপোর্টার</th>
-                    <th>গুগল ডক</th>
-                    <th>স্ট্যাটাস</th>
+                    <th>Unique ID</th>
+                    <th>Category</th>
+                    <th>Slug & Title</th>
+                    <th>Reporter</th>
+                    <th>Google Doc</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody id="deskTableBody">
-                <tr><td colspan="6" style="text-align:center;">ডেটা লোড হচ্ছে...</td></tr>
+                <tr><td colspan="6" style="text-align:center;">Loading scripts...</td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // আপনার ডিপ্লয় করা গুগল ওয়েব অ্যাপের ইউআরএল এখানে বসান:
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9OovsFmkled9RfgeikQAhlFGFjM9wcnUxOw3bVkMpfi2aiuCZ62DiNrLI-CjlNln2Jw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP1Gqo6XllYjD934YlQ40nB8XVye2Jh7F9NhXcuyB8iDlNX5P3VzOsf-M8CGk4wjdRYw/exec";
 
     function handleLogin() {
         const email = document.getElementById("loginEmail").value.trim();
@@ -93,11 +93,11 @@
         const msg = document.getElementById("loginMsg");
 
         if(!email || !password) {
-            msg.innerText = "ইমেইল এবং পাসওয়ার্ড দিন!";
+            msg.innerText = "Please enter email and password!";
             return;
         }
 
-        msg.innerText = "লগইন হচ্ছে...";
+        msg.innerText = "Logging in...";
 
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -122,7 +122,7 @@
             }
         })
         .catch(err => {
-            msg.innerText = "কানেকশন এরর!";
+            msg.innerText = "Connection Error!";
             console.error(err);
         });
     }
@@ -141,11 +141,11 @@
         };
 
         if(!payload.reporterId || !payload.category || !payload.slug || !payload.title) {
-            alert("অনুগ্রহ করে জরুরি ফিল্ডগুলো পূরণ করুন!");
+            alert("Please fill in all required fields!");
             return;
         }
 
-        document.getElementById("submitMsg").innerText = "গুগল ডক তৈরি হচ্ছে, অপেক্ষা করুন...";
+        document.getElementById("submitMsg").innerText = "Creating Google Doc, please wait...";
 
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -155,14 +155,14 @@
         .then(data => {
             if(data.status === "success") {
                 document.getElementById("submitMsg").style.color = "green";
-                document.getElementById("submitMsg").innerHTML = `সফল! ইউনিক আইডি: ${data.uniqueId} | <a href="${data.docUrl}" target="_blank">গুগল ডক খুলুন</a>`;
+                document.getElementById("submitMsg").innerHTML = `Success! Unique ID: ${data.uniqueId} | <a href="${data.docUrl}" target="_blank">Open Google Doc</a>`;
             } else {
                 document.getElementById("submitMsg").style.color = "red";
-                document.getElementById("submitMsg").innerText = "ত্রুটি: " + data.message;
+                document.getElementById("submitMsg").innerText = "Error: " + data.message;
             }
         })
         .catch(err => {
-            alert("সাবমিট করতে সমস্যা হয়েছে।");
+            alert("Failed to submit script.");
             console.error(err);
         });
     }
@@ -194,7 +194,7 @@
                     tbody.appendChild(tr);
                 });
             } else {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">কোনো স্ক্রিপ্ট পাওয়া যায়নি।</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No scripts found.</td></tr>`;
             }
         })
         .catch(err => console.error("Error loading desk data:", err));
@@ -208,7 +208,7 @@
         .then(res => res.json())
         .then(data => {
             if(data.status !== "success") {
-                alert("স্ট্যাটাস আপডেট ব্যর্থ হয়েছে!");
+                alert("Failed to update status!");
             }
         });
     }
